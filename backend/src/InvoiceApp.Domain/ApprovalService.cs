@@ -32,11 +32,22 @@ public class ApprovalService
     {
         var invoice = Find(invoiceId);
         EnsurePending(invoice);
-        EnsureWithinLimit(invoice, role);
+        EnsureMayApprove(invoice, approver, role);
 
-        invoice.Status = InvoiceStatus.Approved;
-        invoice.DecidedBy = approver;
-        invoice.DecidedAt = DateTime.UtcNow;
+        // All checks passed; only now is the invoice mutated.
+        var now = DateTime.UtcNow;
+        var needsSecondApproval = invoice.Amount > ApprovalLimits.DirectorLimit
+            && invoice.Approvals.Count == 0;
+
+        invoice.Approvals.Add(new ApprovalRecord(approver, role, now));
+
+        if (!needsSecondApproval)
+        {
+            invoice.Status = InvoiceStatus.Approved;
+            invoice.DecidedBy = approver;
+            invoice.DecidedAt = now;
+        }
+
         _repository.Update(invoice);
         return invoice;
     }
@@ -63,7 +74,7 @@ public class ApprovalService
         _repository.GetById(invoiceId)
         ?? throw new KeyNotFoundException($"Invoice {invoiceId} was not found.");
 
-    private static void EnsureWithinLimit(Invoice invoice, string role)
+    private static void EnsureMayApprove(Invoice invoice, string approver, string role)
     {
         var limit = ApprovalLimits.LimitFor(role);
 
@@ -73,17 +84,35 @@ public class ApprovalService
                 $"Role {role} cannot approve invoices; only Manager or Director can.");
         }
 
-        if (invoice.Amount > ApprovalLimits.DirectorLimit)
+        if (invoice.Amount <= ApprovalLimits.DirectorLimit)
         {
-            // Placeholder until the two-approver rule is implemented.
-            throw new ApprovalNotAllowedException(
-                $"Invoice {invoice.Id} is above {ApprovalLimits.DirectorLimit:N0}; two approvers are required.");
+            if (invoice.Amount > limit)
+            {
+                throw new ApprovalNotAllowedException(
+                    $"Amount {invoice.Amount:N2} exceeds the {role} limit of {limit:N0}.");
+            }
+
+            return;
         }
 
-        if (invoice.Amount > limit)
+        // Above the Director limit: two distinct approvers, the second a Director.
+        // The Director limit does not apply on its own; Manager or Director may approve first.
+        if (invoice.Approvals.Count == 0)
+        {
+            return;
+        }
+
+        if (invoice.Approvals.Any(existing =>
+                string.Equals(existing.Username, approver, StringComparison.OrdinalIgnoreCase)))
         {
             throw new ApprovalNotAllowedException(
-                $"Amount {invoice.Amount:N2} exceeds the {role} limit of {limit:N0}.");
+                $"The same user cannot approve twice: {approver} has already approved invoice {invoice.Id}.");
+        }
+
+        if (role != ApprovalLimits.DirectorRole)
+        {
+            throw new ApprovalNotAllowedException(
+                $"Invoice {invoice.Id} is above {ApprovalLimits.DirectorLimit:N0}; the second approver must be a Director.");
         }
     }
 

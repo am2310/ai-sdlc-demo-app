@@ -9,9 +9,9 @@
 
 ## 2. Two-approver rule
 
-- [ ] 2.1 Record approvals on the invoice; above 500,000 keep the invoice Pending Approval after the first approval and approve only on a second, distinct, Director approval. Verify: `dotnet test backend/InvoiceApp.sln` passes.
-- [ ] 2.2 Refuse the same user as second approver (case-insensitive) and a non-Director second approver, leaving the invoice with only the first approval. Verify: unit tests below.
-- [ ] 2.3 Unit tests for Manager-then-Director, Director-then-Director, same user, same user with different case, Manager-then-Manager, and unchanged state after each refusal. Verify: tests pass and the Stryker mutation score on the approval logic rises above the 60% baseline.
+- [x] 2.1 Record approvals on the invoice; above 500,000 keep the invoice Pending Approval after the first approval and approve only on a second, distinct, Director approval. Verify: `dotnet test backend/InvoiceApp.sln` passes.
+- [x] 2.2 Refuse the same user as second approver (case-insensitive) and a non-Director second approver, leaving the invoice with only the first approval. Verify: unit tests below.
+- [x] 2.3 Unit tests for Manager-then-Director, Director-then-Director, same user, same user with different case, Manager-then-Manager, and unchanged state after each refusal. Verify: tests pass and the Stryker mutation score on the approval logic rises above the 60% baseline.
 
 ## 3. End-to-end and evidence
 
