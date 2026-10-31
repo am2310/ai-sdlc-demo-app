@@ -2,10 +2,10 @@
 
 ## 1. Single-approver limits
 
-- [ ] 1.1 Add `ApprovalLimits`, `ApprovalNotAllowedException` and the role parameter to `ApprovalService.Approve`; refuse non-approving roles and amounts above the role limit without changing the invoice. Verify: `dotnet test backend/InvoiceApp.sln` passes.
-- [ ] 1.2 Pass the session role from `ApprovalsController`, map the new exception to 403 with the reason, and restrict the controller to Manager and Director. Verify: manual call returns 403 with `{ "error": ... }` for a Manager on a 60,000 invoice.
-- [ ] 1.3 Add demo users `demo.manager`, `demo.director`, `demo.director2`; make `demo.approver` a Manager. Verify: sign-in works for each in the UI.
-- [ ] 1.4 Unit tests for the Manager and Director limits at, just under and just over each boundary, non-approving roles, and unchanged invoice after every refusal. Verify: tests pass and the refusal tests fail if the limit check is removed.
+- [x] 1.1 Add `ApprovalLimits`, `ApprovalNotAllowedException` and the role parameter to `ApprovalService.Approve`; refuse non-approving roles and amounts above the role limit without changing the invoice. Verify: `dotnet test backend/InvoiceApp.sln` passes.
+- [x] 1.2 Pass the session role from `ApprovalsController`, map the new exception to 403 with the reason, and restrict the controller to Manager and Director. Verify: manual call returns 403 with `{ "error": ... }` for a Manager on a 60,000 invoice.
+- [x] 1.3 Add demo users `demo.manager`, `demo.director`, `demo.director2`; make `demo.approver` a Manager. Verify: sign-in works for each in the UI.
+- [x] 1.4 Unit tests for the Manager and Director limits at, just under and just over each boundary, non-approving roles, and unchanged invoice after every refusal. Verify: tests pass and the refusal tests fail if the limit check is removed.
 
 ## 2. Two-approver rule
 

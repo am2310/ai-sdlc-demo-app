@@ -28,10 +28,11 @@ public class ApprovalService
         return invoice;
     }
 
-    public Invoice Approve(string invoiceId, string approver)
+    public Invoice Approve(string invoiceId, string approver, string role)
     {
         var invoice = Find(invoiceId);
         EnsurePending(invoice);
+        EnsureWithinLimit(invoice, role);
 
         invoice.Status = InvoiceStatus.Approved;
         invoice.DecidedBy = approver;
@@ -61,6 +62,30 @@ public class ApprovalService
     private Invoice Find(string invoiceId) =>
         _repository.GetById(invoiceId)
         ?? throw new KeyNotFoundException($"Invoice {invoiceId} was not found.");
+
+    private static void EnsureWithinLimit(Invoice invoice, string role)
+    {
+        var limit = ApprovalLimits.LimitFor(role);
+
+        if (limit is null)
+        {
+            throw new ApprovalNotAllowedException(
+                $"Role {role} cannot approve invoices; only Manager or Director can.");
+        }
+
+        if (invoice.Amount > ApprovalLimits.DirectorLimit)
+        {
+            // Placeholder until the two-approver rule is implemented.
+            throw new ApprovalNotAllowedException(
+                $"Invoice {invoice.Id} is above {ApprovalLimits.DirectorLimit:N0}; two approvers are required.");
+        }
+
+        if (invoice.Amount > limit)
+        {
+            throw new ApprovalNotAllowedException(
+                $"Amount {invoice.Amount:N2} exceeds the {role} limit of {limit:N0}.");
+        }
+    }
 
     private static void EnsurePending(Invoice invoice)
     {
