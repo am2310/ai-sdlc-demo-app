@@ -22,7 +22,7 @@ Admin and the generic Approver role no longer approve or reject. `demo.approver`
 - `cd e2e && npm test`: 1 passed (Manager refused on a 60,000 invoice, reason shown, invoice stays pending)
 - Stryker on `ApprovalService.cs`: 60.00 % before, 79.59 % after (tables in ASSIGNMENT.md)
 
-## Review findings (agent review of the diff, each judged)
+## Review findings (agent review of the diff; verdicts proposed by the orchestrating agent, author to confirm)
 
 | # | Severity | Finding (short) | Verdict | Reason / what was done |
 | --- | --- | --- | --- | --- |

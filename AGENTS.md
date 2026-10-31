@@ -57,7 +57,7 @@ These are the rules `ApprovalService` must enforce. Amounts are inclusive at the
 
 - Sub-agents in `.claude/agents`: `spec-writer`, `implementer`, `test-author`, `reviewer`. Give `implementer` one task at a time.
 - Skills in `.claude/skills`: `approval-rules`, `test-review`, `review-finding-format`.
-- Hooks in `.claude/settings.json` append every prompt, tool use and agent stop to `docs/ai-log/ai-interactions.jsonl` in one fixed JSON shape. Do not edit that file by hand.
+- Hooks in `.claude/settings.json` write one structured entry per interaction to `docs/ai-log/ai-interactions.jsonl` and regenerate `docs/ai-log/ai-interactions-summary.md`. Never invent human fields: record decisions and limitations with `node .claude/hooks/annotate.js last --decision "..."`.
 
 ## Demo accounts (not real credentials)
 

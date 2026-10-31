@@ -27,13 +27,13 @@ Layering: all rules are in `InvoiceApp.Domain`; the controller only passes usern
 4. **Spec**: OpenSpec change under `openspec/changes/add-approval-limits-by-role/` (proposal, spec with WHEN/THEN scenarios, design, tasks). `openspec validate` passes.
 5. **Two-step implementation**: commit 2 (single-approver limits), then commit 3 (two-approver rule), then commits 4 and 5.
 6. **Tests**: 38 xUnit tests and one Playwright test using a page object and role-based locators.
-7. **Self-review**: a read-only `reviewer` sub-agent reviewed the diff; every finding has a verdict in `docs/pr-description.md`.
+7. **Self-review**: a read-only `reviewer` sub-agent reviewed the diff. Every finding has a verdict in `docs/pr-description.md`; the verdicts were proposed by the orchestrating agent and are marked for the author to confirm (see Human oversight).
 8. **AI log**: `docs/ai-log/ai-interactions.jsonl` (see the note below).
-9. **Agents**: `spec-writer`, `implementer`, `test-author` and `reviewer` are defined in `.claude/agents`. The implementer, test-author and reviewer roles were run as sub-agents, one task at a time. I checked every hand-back by re-running the tests and reading the diff.
+9. **Agents**: `spec-writer`, `implementer`, `test-author` and `reviewer` are defined in `.claude/agents`. The implementer, test-author and reviewer roles were run as sub-agents, one task at a time. The orchestrating agent (not the author) checked every hand-back by re-running the tests and reading the diff.
 
 ## Review of the generated tests
 
-All generated tests were read against `.claude/skills/test-review`.
+The orchestrating agent reviewed the generated tests against `.claude/skills/test-review`; the author should still read them (see Human oversight).
 
 | Change | Reason |
 | --- | --- |
@@ -90,9 +90,15 @@ After (`docs/evidence/mutation-after.txt`): **79.59 %**
 
 The "before" run is the original 7 tests against the original code. Re-run with `cd backend/tests/InvoiceApp.Tests && dotnet stryker`.
 
-## AI interaction log: honest note
+## AI interaction log
 
-The hook is configured, but I created it part-way through the session and that session was not started from this repository, so Claude Code did not load it. `docs/ai-log/ai-interactions.jsonl` was therefore **backfilled** from the session record through the same hook script, with `agent` set to `backfill:<role>` so those entries are distinguishable. Prompts are the user's real messages (shortened); sub-agent entries are their hand-back summaries. Backfilled timestamps are the time the script ran, not the time of the original event. Sessions started in this repo from now on log live.
+Files: `docs/ai-log/ai-interactions.jsonl` (structured, one JSON object per interaction) and `docs/ai-log/ai-interactions-summary.md` (readable summary generated from it).
+
+Schema follows the programme's required fields: id, timestamp, stage, agent name/type, AI tool and model, mode, skills used, sub-agents used, MCP tools used, tools used, request, suggestion (AI output), human decision, action verification, limitation, status and outcome, artifacts, and related commit ids.
+
+- **Automatic:** `.claude/settings.json` hooks (`UserPromptSubmit`, `PostToolUse`, `SubagentStop`, `Stop`) run `.claude/hooks/log-ai-interaction.js`, which collects an interaction from prompt to stop and writes one entry, then regenerates the summary with `render-summary.js`. Tool, model (from the session transcript), mode, skills, sub-agents, MCP tools, files touched, commits and test results are captured without manual effort.
+- **Human side:** a tool cannot know what a person decided, so `human_decision`, `limitation` and extra verification are filled by the author with `node .claude/hooks/annotate.js last --decision "..." --limitation "..."`. They stay `null` until then; nothing is invented.
+- **Backfill (important):** the hook was created part-way through the working session and that session was not started from this repository, so Claude Code did not load it. The 14 entries in the current log are `"source": "backfill"`, reconstructed by the agent from the session, with approximate timestamps. Only 4 of the 14 record a human decision, because only those are things the author actually did (supplied the PDF and fork URL, ran `openspec init` after the agent's command was blocked, relayed the log format). Agent-made assumptions and checks are labelled as such. Entries from sessions started in this repo are written live by the hook with `"source": "hook"`.
 
 ## Decisions the brief did not specify
 
@@ -100,6 +106,16 @@ The hook is configured, but I created it part-way through the session and that s
 - The first approver above 500,000 may be a Manager or a Director.
 - Limits are inclusive.
 - Refusals are HTTP 403 with `{ "error": reason }`.
+
+## Human oversight (author to complete before submitting)
+
+The agent did the implementation, verification and first-pass judging. The following are the author's to do and record, and are not claimed as done here:
+
+- [ ] Read the diff and the generated tests; note anything changed or rejected.
+- [ ] Confirm or change the review verdicts in `docs/pr-description.md`.
+- [ ] Confirm the role-policy assumptions above (Approver/Admin retired, Manager allowed as first approver above 500,000, Admin cannot reject).
+- [ ] Annotate the log entries where you made or confirmed a decision, using `.claude/hooks/annotate.js`.
+- [ ] Confirm tool compliance with the assignment owner.
 
 ## How to run
 
