@@ -74,6 +74,18 @@ public class ApprovalLimitsTests
     }
 
     [Fact]
+    public void Approve_ManagerAtDirectorLimit_IsRefusedAndInvoiceUnchanged()
+    {
+        var (service, repository) = PendingInvoiceOf(500000m);
+
+        var exception = Assert.Throws<ApprovalNotAllowedException>(
+            () => service.Approve(InvoiceId, "demo.manager", "Manager"));
+
+        Assert.Contains("Manager limit of 50,000", exception.Message);
+        AssertInvoiceUnchanged(repository);
+    }
+
+    [Fact]
     public void Approve_DirectorJustOverManagerLimit_ApprovesInvoice()
     {
         var (service, repository) = PendingInvoiceOf(50000.01m);

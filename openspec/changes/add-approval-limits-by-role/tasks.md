@@ -15,6 +15,6 @@
 
 ## 3. End-to-end and evidence
 
-- [ ] 3.1 Playwright test with a page object: sign in as the manager, try to approve an over-limit invoice, see the reason, invoice still pending. Verify: `cd e2e && npm test` passes.
-- [ ] 3.2 Re-run Stryker and record the after score next to the before score. Verify: `docs/evidence/mutation-after.txt` exists.
-- [ ] 3.3 Update README demo accounts and approval rules. Verify: README lists the new users and limits.
+- [x] 3.1 Playwright test with a page object: sign in as the manager, try to approve an over-limit invoice, see the reason, invoice still pending. Verify: `cd e2e && npm test` passes.
+- [x] 3.2 Re-run Stryker and record the after score next to the before score. Verify: `docs/evidence/mutation-after.txt` exists.
+- [x] 3.3 Update README demo accounts and approval rules. Verify: README lists the new users and limits.
