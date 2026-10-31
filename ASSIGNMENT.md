@@ -26,7 +26,7 @@ Layering: all rules are in `InvoiceApp.Domain`; the controller only passes usern
 3. **Hooks**: `.claude/settings.json` runs `.claude/hooks/log-ai-interaction.js` on prompt, tool use and agent stop, writing one fixed JSON shape per line.
 4. **Spec**: OpenSpec change under `openspec/changes/add-approval-limits-by-role/` (proposal, spec with WHEN/THEN scenarios, design, tasks). `openspec validate` passes.
 5. **Two-step implementation**: commit 2 (single-approver limits), then commit 3 (two-approver rule), then commits 4 and 5.
-6. **Tests**: 38 xUnit tests and one Playwright test using a page object and role-based locators.
+6. **Tests**: 39 xUnit tests and one Playwright test using a page object and role-based locators.
 7. **Self-review**: a read-only `reviewer` sub-agent reviewed the diff. Every finding has a verdict in `docs/pr-description.md`; the verdicts were proposed by the orchestrating agent and are marked for the author to confirm (see Human oversight).
 8. **AI log**: `docs/ai-log/ai-interactions.jsonl` (see the note below).
 9. **Agents**: `spec-writer`, `implementer`, `test-author` and `reviewer` are defined in `.claude/agents`. The implementer, test-author and reviewer roles were run as sub-agents, one task at a time. The orchestrating agent (not the author) checked every hand-back by re-running the tests and reading the diff.
@@ -43,6 +43,7 @@ The orchestrating agent reviewed the generated tests against `.claude/skills/tes
 | Changed: limit-refusal tests also assert `Approvals` is empty | Review finding 3 |
 | Changed: Admin and unknown-role tests assert the "cannot approve" reason | Review finding 6 |
 | Added: simultaneous approvals by one Director record one approval | Review finding 1; verified it fails without the lock |
+| Added: refusal messages format 500,000 the same under an Indian culture | Found while rehearsing the demo through the API: the message showed "5,00,000" on a machine with en-IN settings; the test fails on the old code (checked) |
 | Removed: none | |
 
 Remaining Stryker survivors are mostly pre-existing code (Submit and Reject messages, `Update` calls on a shared in-memory object that a no-op fake cannot observe) plus equivalent mutants in the new code.
@@ -67,20 +68,20 @@ Before the change (`docs/evidence/mutation-before.txt`): **60.00 %**
 ╰───────────────────────────────────┴─────┴──────┴───────┴────────┴──────┴─────╯
 ```
 
-After (`docs/evidence/mutation-after.txt`): **79.59 %**
+After (`docs/evidence/mutation-after.txt`): **78.72 %**
 
 ```
 ╭───────────────────────────────────┬─────┬──────┬───────┬────────┬──────┬─────╮
 │ File                              │  %  │   #  │    #  │     #  │ # no │  #  │
 │                                   │ sc… │ kil… │ time… │ survi… │  cov │ er… │
 ├───────────────────────────────────┼─────┼──────┼───────┼────────┼──────┼─────┤
-│ C:\Enact\ai-sdlc-demo-app\backend │ 79. │   39 │     0 │     54 │    0 │   4 │
-│ \src                              │  59 │      │       │        │      │     │
+│ C:\Enact\ai-sdlc-demo-app\backend │ 78. │   37 │     0 │     56 │    0 │   6 │
+│ \src                              │  72 │      │       │        │      │     │
 │ ApprovalLimits.cs                 │ N/A │    0 │     0 │      0 │    0 │   0 │
 │ ApprovalNotAllowedException.cs    │ N/A │    0 │     0 │      0 │    0 │   0 │
 │ ApprovalRecord.cs                 │ N/A │    0 │     0 │      0 │    0 │   0 │
-│ ApprovalService.cs                │ 79. │   39 │     0 │     30 │    0 │   4 │
-│                                   │  59 │      │       │        │      │     │
+│ ApprovalService.cs                │ 78. │   37 │     0 │     32 │    0 │   6 │
+│                                   │  72 │      │       │        │      │     │
 │ DiscountCalculator.cs             │ N/A │    0 │     0 │     22 │    0 │   0 │
 │ IInvoiceRepository.cs             │ N/A │    0 │     0 │      0 │    0 │   0 │
 │ Invoice.cs                        │ N/A │    0 │     0 │      2 │    0 │   0 │

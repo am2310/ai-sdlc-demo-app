@@ -190,6 +190,27 @@ public class TwoApproverRuleTests
     }
 
     [Fact]
+    public void Approve_RefusalMessagesUseInvariantNumberFormatting_WhateverTheMachineCulture()
+    {
+        var original = System.Globalization.CultureInfo.CurrentCulture;
+        System.Globalization.CultureInfo.CurrentCulture = new System.Globalization.CultureInfo("en-IN");
+        try
+        {
+            var (service, _) = PendingInvoiceOf(600000m);
+            service.Approve(InvoiceId, "demo.director", DirectorRole);
+
+            var exception = Assert.Throws<ApprovalNotAllowedException>(
+                () => service.Approve(InvoiceId, "demo.manager", "Manager"));
+
+            Assert.Contains("500,000", exception.Message);
+        }
+        finally
+        {
+            System.Globalization.CultureInfo.CurrentCulture = original;
+        }
+    }
+
+    [Fact]
     public void Approve_SameDirectorFromTwoSimultaneousRequests_RecordsOnlyOneApproval()
     {
         for (var attempt = 0; attempt < 50; attempt++)

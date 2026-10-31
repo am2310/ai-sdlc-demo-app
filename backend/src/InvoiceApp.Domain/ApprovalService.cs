@@ -108,8 +108,8 @@ public class ApprovalService
         {
             if (invoice.Amount > limit)
             {
-                throw new ApprovalNotAllowedException(
-                    $"Amount {invoice.Amount:N2} exceeds the {role} limit of {limit:N0}.");
+                throw new ApprovalNotAllowedException(FormattableString.Invariant(
+                    $"Amount {invoice.Amount:N2} exceeds the {role} limit of {limit:N0}."));
             }
 
             return;
@@ -131,8 +131,8 @@ public class ApprovalService
 
         if (role != ApprovalLimits.DirectorRole)
         {
-            throw new ApprovalNotAllowedException(
-                $"Invoice {invoice.Id} is above {ApprovalLimits.DirectorLimit:N0}; the second approver must be a Director.");
+            throw new ApprovalNotAllowedException(FormattableString.Invariant(
+                $"Invoice {invoice.Id} is above {ApprovalLimits.DirectorLimit:N0}; the second approver must be a Director."));
         }
     }
 

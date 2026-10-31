@@ -4,14 +4,14 @@ _Generated from `ai-interactions.jsonl` by `.claude/hooks/render-summary.js`. Do
 
 ## Totals
 
-- Interactions logged: 14 (0 captured live by the hook, 14 backfilled)
-- Tool and model: Claude Code / claude-sonnet-5-5 (9), Claude Code / claude-sonnet-5-5 (inherited default for sub-agents) (5)
-- Stages: setup (4), implementation (3), test (2), documentation (2), spec (1), e2e-test (1), review (1)
+- Interactions logged: 15 (0 captured live by the hook, 15 backfilled)
+- Tool and model: Claude Code / claude-sonnet-5-5 (10), Claude Code / claude-sonnet-5-5 (inherited default for sub-agents) (5)
+- Stages: setup (4), implementation (4), test (2), documentation (2), spec (1), e2e-test (1), review (1)
 - Skills used: test-review (2), approval-rules (1), review-finding-format (1)
 - Sub-agents used: implementer (2), test-author (2), reviewer (1)
 - MCP tools used: none
-- Interactions with a recorded human decision: 4 of 14
-- Outcomes: successful (11), successful after rework (2), successful after workaround (1)
+- Interactions with a recorded human decision: 5 of 15
+- Outcomes: successful (11), successful after rework (3), successful after workaround (1)
 
 ## Timeline
 
@@ -31,6 +31,7 @@ _Generated from `ai-interactions.jsonl` by `.claude/hooks/render-summary.js`. Do
 | 2026-10-31T17:58:00Z | implementation | Apply the review fixes: lock around decisions, 403 reason body, hide decision buttons, stronger tests, Stryker | claude-code-main (built-in), agent | successful | - | mutation check: first attempt was invalid (per-instance lock still protected the shared service); the agent caught it and redid it with a non-contending lock: t |
 | 2026-10-31T18:02:00Z | documentation | Write ASSIGNMENT.md, the PR description and a first AI interaction log | claude-code-main (built-in), agent | successful after rework | - | Tables generated from docs/evidence files, not retyped |
 | 2026-10-31T18:10:00Z | documentation | User relayed the programme's required AI log fields (tool/model, agent type and mode, skills, sub-agents, MCP, | claude-code-main (built-in), agent | successful | User relayed the programme requirement and sample format from their Teams message and asked for the log to follow it. | Hook tested with simulated events: skills, sub-agent, MCP tool, file, commit and test-result fields all populated |
+| 2026-10-31T18:25:00Z | implementation | User: write a demo script and a run guide. Agent verified the scripted UI flow through the API first. | claude-code-main (built-in), agent | successful after rework | User asked for the demo script and the run guide. | API replay of the demo flow before the fix showed "5,00,000"; new test fails on the old code (checked) and passes with the fix; dotnet test -> Passed!  - Failed |
 
 ## Detail
 
@@ -271,4 +272,21 @@ _Generated from `ai-interactions.jsonl` by `.claude/hooks/render-summary.js`. Do
 - **Verification:** Hook tested with simulated events: skills, sub-agent, MCP tool, file, commit and test-result fields all populated
 - **Limitation:** Hook cannot observe human intent, so human_decision stays null until annotated; the author should annotate the entries where they made or confirmed a decision. Model name comes from the session transcript and falls back to AI_LOG_MODEL or "unknown".
 - **Outcome:** successful
+
+### 20261031T182800Z-agent-demo-rehearsal-found-culture-bug
+
+- **When:** 2026-10-31T18:25:00Z (backfill)
+- **Tool / model / mode:** Claude Code / claude-sonnet-5-5 / agent
+- **Request:** User: write a demo script and a run guide. Agent verified the scripted UI flow through the API first.
+- **Skills:** none
+- **Sub-agents:** none
+- **MCP tools:** none
+- **Tools:** `Write`, `Bash`, `Edit`
+- **Artifacts:** `docs/demo-script.md`, `docs/run-guide.md`, `backend/src/InvoiceApp.Domain/ApprovalService.cs`, `backend/tests/InvoiceApp.Tests/TwoApproverRuleTests.cs`, `docs/evidence/mutation-after.txt`
+- **Related commits:** none
+- **AI output / suggestion:** Wrote docs/demo-script.md and docs/run-guide.md. Replaying the scripted flow through the API exposed that the "second approver must be a Director" message printed 5,00,000 under this machine's en-IN culture. Fixed with invariant formatting, added a test pinned to en-IN, re-ran Stryker (78.72%).
+- **Human decision / intervention:** User asked for the demo script and the run guide.
+- **Verification:** API replay of the demo flow before the fix showed "5,00,000"; new test fails on the old code (checked) and passes with the fix; dotnet test -> Passed!  - Failed: 0, Passed: 39; stryker -> final mutation score is 78.72 %
+- **Limitation:** The unit and e2e tests had not caught this because 50,000 and 60,000 format identically in en-US and en-IN. Stryker score fell from 79.59% to 78.72% because the fix added mutants.
+- **Outcome:** successful after rework
 

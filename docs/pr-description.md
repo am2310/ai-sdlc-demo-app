@@ -11,6 +11,7 @@ Spec: `openspec/changes/add-approval-limits-by-role/` (OpenSpec). Agent context:
 3. Two-approver rule with tests for both negative rules
 4. Playwright e2e test, "after" mutation evidence, docs
 5. Fixes from the agent self-review (below)
+6. Write-up and AI log, then a follow-up fix for culture-dependent number formatting in refusal messages (found while rehearsing the demo)
 
 ## Breaking change
 
@@ -18,9 +19,9 @@ Admin and the generic Approver role no longer approve or reject. `demo.approver`
 
 ## Test evidence
 
-- `dotnet test backend/InvoiceApp.sln`: 38 passed
+- `dotnet test backend/InvoiceApp.sln`: 39 passed
 - `cd e2e && npm test`: 1 passed (Manager refused on a 60,000 invoice, reason shown, invoice stays pending)
-- Stryker on `ApprovalService.cs`: 60.00 % before, 79.59 % after (tables in ASSIGNMENT.md)
+- Stryker on `ApprovalService.cs`: 60.00 % before, 78.72 % after (tables in ASSIGNMENT.md)
 
 ## Review findings (agent review of the diff; verdicts proposed by the orchestrating agent, author to confirm)
 
