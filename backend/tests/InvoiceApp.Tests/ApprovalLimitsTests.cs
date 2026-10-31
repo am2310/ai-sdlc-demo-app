@@ -28,6 +28,7 @@ public class ApprovalLimitsTests
         Assert.Null(stored.DecidedBy);
         Assert.Null(stored.DecidedAt);
         Assert.Null(stored.DecisionNote);
+        Assert.Empty(stored.Approvals);
     }
 
     private static void AssertApprovedBy(FakeInvoiceRepository repository, string approver)
@@ -116,7 +117,7 @@ public class ApprovalLimitsTests
         var exception = Assert.Throws<ApprovalNotAllowedException>(
             () => service.Approve(InvoiceId, "demo.user", role));
 
-        Assert.False(string.IsNullOrWhiteSpace(exception.Message));
+        Assert.Contains("cannot approve", exception.Message);
         AssertInvoiceUnchanged(repository);
     }
 

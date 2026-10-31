@@ -6,6 +6,10 @@ namespace InvoiceApp.Domain;
 /// </summary>
 public class ApprovalService
 {
+    // Decisions are check-then-change on a shared invoice; one lock keeps two requests (a double-click,
+    // a retry) from both passing the checks. Coarse on purpose: this is in-memory demo code.
+    private static readonly object DecisionLock = new();
+
     private readonly IInvoiceRepository _repository;
 
     public ApprovalService(IInvoiceRepository repository)
@@ -29,6 +33,14 @@ public class ApprovalService
     }
 
     public Invoice Approve(string invoiceId, string approver, string role)
+    {
+        lock (DecisionLock)
+        {
+            return ApproveLocked(invoiceId, approver, role);
+        }
+    }
+
+    private Invoice ApproveLocked(string invoiceId, string approver, string role)
     {
         var invoice = Find(invoiceId);
         EnsurePending(invoice);
@@ -59,6 +71,14 @@ public class ApprovalService
             throw new ArgumentException("A reason is required to reject an invoice.", nameof(reason));
         }
 
+        lock (DecisionLock)
+        {
+            return RejectLocked(invoiceId, approver, reason);
+        }
+    }
+
+    private Invoice RejectLocked(string invoiceId, string approver, string reason)
+    {
         var invoice = Find(invoiceId);
         EnsurePending(invoice);
 

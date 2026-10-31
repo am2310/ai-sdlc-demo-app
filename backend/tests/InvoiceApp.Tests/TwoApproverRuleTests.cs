@@ -185,8 +185,27 @@ public class TwoApproverRuleTests
         var exception = Assert.Throws<ApprovalNotAllowedException>(
             () => service.Approve(InvoiceId, "demo.admin", "Admin"));
 
-        Assert.False(string.IsNullOrWhiteSpace(exception.Message));
+        Assert.Contains("cannot approve", exception.Message);
         AssertOnlyFirstApprovalRecorded(repository, "demo.director");
+    }
+
+    [Fact]
+    public void Approve_SameDirectorFromTwoSimultaneousRequests_RecordsOnlyOneApproval()
+    {
+        for (var attempt = 0; attempt < 50; attempt++)
+        {
+            var (service, repository) = PendingInvoiceOf(600000m);
+
+            Parallel.For(0, 2, _ =>
+            {
+                try { service.Approve(InvoiceId, "demo.director", DirectorRole); }
+                catch (ApprovalNotAllowedException) { }
+            });
+
+            var stored = repository.GetById(InvoiceId)!;
+            Assert.Equal(InvoiceStatus.PendingApproval, stored.Status);
+            Assert.Single(stored.Approvals);
+        }
     }
 
     [Fact]
@@ -197,7 +216,7 @@ public class TwoApproverRuleTests
         var exception = Assert.Throws<ApprovalNotAllowedException>(
             () => service.Approve(InvoiceId, "demo.admin", "Admin"));
 
-        Assert.False(string.IsNullOrWhiteSpace(exception.Message));
+        Assert.Contains("cannot approve", exception.Message);
         var stored = repository.GetById(InvoiceId)!;
         Assert.Equal(InvoiceStatus.PendingApproval, stored.Status);
         Assert.Empty(stored.Approvals);

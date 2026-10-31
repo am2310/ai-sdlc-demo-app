@@ -14,20 +14,20 @@ Version: 4.13.0
 A new version of Stryker.NET (5.0.0) is available. Please consider upgrading 
 using `dotnet tool update -g dotnet-stryker`
 
-[23:17:34 INF] Analysis starting.
-[23:17:34 INF] Analyzing 1 test project(s).
-[23:17:37 INF] Found project C:\Enact\ai-sdlc-demo-app\backend\src\InvoiceApp.Domain\InvoiceApp.Domain.csproj to mutate.
-[23:17:37 INF] Analysis complete.
-[23:17:37 INF] Building test project C:\Enact\ai-sdlc-demo-app\backend\tests\InvoiceApp.Tests\InvoiceApp.Tests.csproj (1/1)
-[23:17:37 INF] Building project InvoiceApp.Tests.csproj using dotnet build InvoiceApp.Tests.csproj -c Debug --property:Platform=AnyCPU (directory C:\Enact\ai-sdlc-demo-app\backend\tests\InvoiceApp.Tests.)
-[23:17:43 INF] Number of tests found: 37 for project C:\Enact\ai-sdlc-demo-app\backend\src\InvoiceApp.Domain\InvoiceApp.Domain.csproj. Initial test run started.
-[23:17:46 INF] 89 mutants created
-[23:17:46 INF] Capture mutant coverage using 'CoverageBasedTest' mode.
-[23:17:47 INF] 4     mutants got status CompileError. Reason: Mutant caused compile errors
-[23:17:47 INF] 14    mutants got status Ignored.      Reason: Removed by block already covered filter
-[23:17:47 INF] 24    mutants got status Ignored.      Reason: Removed by mutate filter
-[23:17:47 INF] 42    total mutants are skipped for the above mentioned reasons
-[23:17:47 INF] 47    total mutants will be tested
+[23:20:44 INF] Analysis starting.
+[23:20:44 INF] Analyzing 1 test project(s).
+[23:20:47 INF] Found project C:\Enact\ai-sdlc-demo-app\backend\src\InvoiceApp.Domain\InvoiceApp.Domain.csproj to mutate.
+[23:20:47 INF] Analysis complete.
+[23:20:47 INF] Building test project C:\Enact\ai-sdlc-demo-app\backend\tests\InvoiceApp.Tests\InvoiceApp.Tests.csproj (1/1)
+[23:20:48 INF] Building project InvoiceApp.Tests.csproj using dotnet build InvoiceApp.Tests.csproj -c Debug --property:Platform=AnyCPU (directory C:\Enact\ai-sdlc-demo-app\backend\tests\InvoiceApp.Tests.)
+[23:20:54 INF] Number of tests found: 38 for project C:\Enact\ai-sdlc-demo-app\backend\src\InvoiceApp.Domain\InvoiceApp.Domain.csproj. Initial test run started.
+[23:20:57 INF] 93 mutants created
+[23:20:57 INF] Capture mutant coverage using 'CoverageBasedTest' mode.
+[23:20:58 INF] 4     mutants got status CompileError. Reason: Mutant caused compile errors
+[23:20:58 INF] 16    mutants got status Ignored.      Reason: Removed by block already covered filter
+[23:20:58 INF] 24    mutants got status Ignored.      Reason: Removed by mutate filter
+[23:20:58 INF] 44    total mutants are skipped for the above mentioned reasons
+[23:20:58 INF] 49    total mutants will be tested
 
 
 All mutants have been tested, and your mutation score has been calculated
@@ -35,13 +35,13 @@ All mutants have been tested, and your mutation score has been calculated
 │ File                              │  %  │   #  │    #  │     #  │ # no │  #  │
 │                                   │ sc… │ kil… │ time… │ survi… │  cov │ er… │
 ├───────────────────────────────────┼─────┼──────┼───────┼────────┼──────┼─────┤
-│ C:\Enact\ai-sdlc-demo-app\backend │ 78. │   37 │     0 │     52 │    0 │   4 │
-│ \src                              │  72 │      │       │        │      │     │
+│ C:\Enact\ai-sdlc-demo-app\backend │ 79. │   39 │     0 │     54 │    0 │   4 │
+│ \src                              │  59 │      │       │        │      │     │
 │ ApprovalLimits.cs                 │ N/A │    0 │     0 │      0 │    0 │   0 │
 │ ApprovalNotAllowedException.cs    │ N/A │    0 │     0 │      0 │    0 │   0 │
 │ ApprovalRecord.cs                 │ N/A │    0 │     0 │      0 │    0 │   0 │
-│ ApprovalService.cs                │ 78. │   37 │     0 │     28 │    0 │   4 │
-│                                   │  72 │      │       │        │      │     │
+│ ApprovalService.cs                │ 79. │   39 │     0 │     30 │    0 │   4 │
+│                                   │  59 │      │       │        │      │     │
 │ DiscountCalculator.cs             │ N/A │    0 │     0 │     22 │    0 │   0 │
 │ IInvoiceRepository.cs             │ N/A │    0 │     0 │      0 │    0 │   0 │
 │ Invoice.cs                        │ N/A │    0 │     0 │      2 │    0 │   0 │
@@ -49,7 +49,7 @@ All mutants have been tested, and your mutation score has been calculated
 ╰───────────────────────────────────┴─────┴──────┴───────┴────────┴──────┴─────╯
 
 Your json report has been generated at:
-]8;id=1770708223;file://C:/Enact/ai-sdlc-demo-app/backend/tests/InvoiceApp.Tests/StrykerOutput/2026-10-31.23-17-33/reports/mutation-report.json\C:\Enact\ai-sdlc-demo-app\backend\tests\InvoiceApp.Tests\StrykerOutput\2026-10-3]8;;\
-]8;id=1334565943;file://C:/Enact/ai-sdlc-demo-app/backend/tests/InvoiceApp.Tests/StrykerOutput/2026-10-31.23-17-33/reports/mutation-report.json\1.23-17-33\reports\mutation-report.json]8;;\
-[23:18:11 INF] Time Elapsed 00:00:37.7944977
-[23:18:11 INF] The final mutation score is 78.72 %
+]8;id=1202357051;file://C:/Enact/ai-sdlc-demo-app/backend/tests/InvoiceApp.Tests/StrykerOutput/2026-10-31.23-20-44/reports/mutation-report.json\C:\Enact\ai-sdlc-demo-app\backend\tests\InvoiceApp.Tests\StrykerOutput\2026-10-3]8;;\
+]8;id=966442345;file://C:/Enact/ai-sdlc-demo-app/backend/tests/InvoiceApp.Tests/StrykerOutput/2026-10-31.23-20-44/reports/mutation-report.json\1.23-20-44\reports\mutation-report.json]8;;\
+[23:21:13 INF] Time Elapsed 00:00:28.6526062
+[23:21:13 INF] The final mutation score is 79.59 %
