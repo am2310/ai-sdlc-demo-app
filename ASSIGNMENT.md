@@ -2,7 +2,7 @@
 
 Fork: https://github.com/am2310/ai-sdlc-demo-app | Branch: `feature/approval-limits-by-role` | Spec tool: OpenSpec | Agent tool: Claude Code
 
-**Demo video:** TODO: paste the link here after recording.
+**Demo video:** https://nagarro-my.sharepoint.com/:v:/p/aakash_mishra01/IQAstql5wBNLRJsUP6B9CguyAWLmeuY-jqMlP_lRkb2ybi4?e=1wf70L
 
 ## Tooling and compliance
 
