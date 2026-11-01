@@ -1,0 +1,8 @@
+{
+  "stryker-config": {
+    "project": "InvoiceApp.Domain.csproj",
+    "reporters": ["cleartext", "json"],
+    "mutate": ["ApprovalService.cs"],
+    "thresholds": { "high": 90, "low": 70, "break": 70 }
+  }
+}
